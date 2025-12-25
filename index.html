@@ -2,52 +2,40 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>TikTok Downloader HD</title>
 
 <style>
 :root{
   --purple:#9b5cff;
-  --purple-glow:rgba(155,92,255,.6);
+  --glow:rgba(155,92,255,.6);
+  --bg:#050509;
   --glass:rgba(255,255,255,.06);
 }
-
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+  margin:0;padding:0;box-sizing:border-box;
   font-family:"Segoe UI",sans-serif;
   touch-action:manipulation;
   -webkit-user-select:none;
   user-select:none;
 }
-
 body{
   min-height:100vh;
-  background:radial-gradient(circle at top,#2a0d3f,#050509 65%);
+  background:radial-gradient(circle at top,#2a0d3f,#050509 70%);
   display:flex;
   justify-content:center;
   align-items:center;
   color:#fff;
 }
-
-.container{
-  width:92%;
-  max-width:380px;
-}
+.container{width:92%;max-width:380px}
 
 /* CARD */
 .card{
   border:2px solid var(--purple);
   border-radius:20px;
   padding:6px;
-  box-shadow:0 0 30px var(--purple-glow);
-  margin-bottom:18px;
+  box-shadow:0 0 30px var(--glow);
 }
-
 .card img{
   width:100%;
   border-radius:14px;
@@ -57,164 +45,143 @@ body{
 /* TITLE */
 .title{
   text-align:center;
-  font-size:26px;
+  font-size:24px;
   font-weight:800;
-  letter-spacing:2px;
-  margin-bottom:14px;
+  margin:18px 0;
 }
 
 /* INPUT */
-.label{font-size:15px;opacity:.85;margin-bottom:6px}
-
+.label{opacity:.8;margin-bottom:6px}
 input{
   width:100%;
   padding:15px;
-  border-radius:20px;
+  border-radius:18px;
   background:var(--glass);
   border:2px solid var(--purple);
   color:#fff;
   outline:none;
-  margin-bottom:10px;
   user-select:text;
 }
 
-input::placeholder{color:#888}
-
-/* BUTTON */
+/* 🔥 BUTTON GRADIENT ANIMATED */
 .btn{
   width:100%;
+  margin-top:14px;
   padding:16px;
   border-radius:22px;
-  background:linear-gradient(135deg,#8f4bff,#b277ff);
   border:none;
   color:#fff;
-  font-size:18px;
+  font-size:17px;
   font-weight:700;
-  letter-spacing:1px;
-  box-shadow:0 0 35px var(--purple-glow);
   cursor:pointer;
+
+  background:linear-gradient(
+    120deg,
+    #7f3dff,
+    #9b5cff,
+    #b277ff,
+    #7f3dff
+  );
+  background-size:300% 100%;
+  animation:gradientMove 3s linear infinite;
+
+  box-shadow:0 0 35px var(--glow);
+}
+.btn:active{
+  transform:scale(.96);
+  animation-play-state:paused;
 }
 
-.btn:active{transform:scale(.97)}
-
-/* LOADING */
-.loading{pointer-events:none;opacity:.7;position:relative}
-.loading::after{
-  content:"";
-  width:22px;height:22px;
-  border:3px solid #fff;
-  border-top:3px solid transparent;
-  border-radius:50%;
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  animation:spin 1s linear infinite;
+/* GRADIENT MOVE LEFT */
+@keyframes gradientMove{
+  0%{background-position:100% 0}
+  100%{background-position:0 0}
 }
-@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 
 /* LINKS */
 .links a{
   display:block;
   margin-top:12px;
-  padding:15px;
+  padding:14px;
   border-radius:18px;
-  background:rgba(255,255,255,.06);
+  background:var(--glass);
   border:1px solid var(--purple);
   color:#fff;
   text-decoration:none;
-  font-weight:600;
   text-align:center;
-  box-shadow:0 0 18px rgba(155,92,255,.35);
 }
 
 /* CAPTION */
-.caption-box{
+.caption{
   margin-top:14px;
   padding:14px;
   border-radius:18px;
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.15);
-  backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.35);
+  border:1px solid var(--purple);
   font-size:14px;
+  line-height:1.4;
+}
+
+/* BACK */
+.back{
+  text-align:center;
+  margin-top:14px;
+  opacity:.6;
   display:none;
 }
 
-/* MUSIC PLAYER */
+/* MUSIC */
 .music{
-  margin-top:14px;
+  margin-top:18px;
   text-align:center;
   font-size:20px;
   cursor:pointer;
   opacity:.8;
 }
 
-.music span{
-  padding:8px 14px;
-  border-radius:50%;
-  background:rgba(255,255,255,.08);
-  box-shadow:0 0 12px rgba(155,92,255,.4);
-}
-
-/* BACK */
-.back{
-  margin-top:16px;
-  text-align:center;
-  font-size:13px;
-  opacity:.6;
-  cursor:pointer;
-  display:none;
-}
-
 /* MODAL */
 .modal{
-  position:fixed;
-  inset:0;
+  position:fixed;inset:0;
   background:rgba(0,0,0,.55);
   display:none;
   justify-content:center;
   align-items:center;
   backdrop-filter:blur(6px);
 }
-
 .modal-box{
   width:85%;
-  max-width:300px;
-  background:rgba(20,10,30,.95);
-  border:1px solid var(--purple);
+  max-width:280px;
+  background:#12081e;
   border-radius:22px;
-  box-shadow:0 0 30px var(--purple-glow);
-  text-align:center;
+  border:1px solid var(--purple);
+  box-shadow:0 0 25px var(--glow);
 }
-
 .modal-box h3{
   padding:18px;
-  font-size:18px;
+  font-size:17px;
+  text-align:center;
   border-bottom:1px solid rgba(255,255,255,.1);
 }
-
 .modal-actions{display:flex}
 .modal-actions button{
   flex:1;
   padding:14px;
-  font-size:16px;
   border:none;
   background:none;
   color:#fff;
-  cursor:pointer;
+  font-size:16px;
 }
 .modal-actions button:last-child{
   color:var(--purple);
   font-weight:700;
+  border-left:1px solid rgba(255,255,255,.1);
 }
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" src="Media/menu.mp3" loop></audio>
-
 <div class="container">
-
   <div class="card">
     <img id="preview" src="Media/menu.jpg">
   </div>
@@ -224,20 +191,15 @@ input::placeholder{color:#888}
   <div class="label">TikTok Link</div>
   <input id="url" placeholder="Tempel link TikTok">
 
-  <button class="btn" id="btn" onclick="getVideo()">DOWNLOAD</button>
+  <button class="btn" onclick="getVideo()">DOWNLOAD</button>
 
-  <!-- MUSIC CONTROL (MENU AWAL) -->
-  <div class="music" id="musicBtn" onclick="toggleMusic()">
-    <span id="musicIcon">⏸️</span>
-  </div>
-
-  <div class="caption-box" id="caption"></div>
+  <div id="caption"></div>
   <div class="links" id="links"></div>
   <div class="back" id="back" onclick="resetUI()">kembali</div>
 
+  <div class="music" id="musicBtn" onclick="toggleMusic()">Play</div>
 </div>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
     <h3>Download file?</h3>
@@ -248,96 +210,82 @@ input::placeholder{color:#888}
   </div>
 </div>
 
-<script>
-let downloadUrl="", captionText="";
-const music=document.getElementById("bgMusic");
-const musicBtn=document.getElementById("musicBtn");
-const musicIcon=document.getElementById("musicIcon");
+<audio id="bgm" src="Media/menu.mp3" loop></audio>
 
-/* autoplay (butuh user interaction di sebagian browser) */
-document.body.addEventListener("click",()=>{
-  if(music.paused) music.play();
-},{once:true});
+<script>
+document.addEventListener("wheel",e=>{
+  if(e.ctrlKey) e.preventDefault()
+},{passive:false});
+
+const bgm=document.getElementById("bgm");
+const musicBtn=document.getElementById("musicBtn");
+let downloadUrl="";
 
 function toggleMusic(){
-  if(music.paused){
-    music.play();
-    musicIcon.textContent="⏸️";
+  if(bgm.paused){
+    bgm.play();
+    musicBtn.textContent="Play";
   }else{
-    music.pause();
-    musicIcon.textContent="▶️";
+    bgm.pause();
+    musicBtn.textContent="Stop";
   }
 }
 
 async function getVideo(){
-  const btn=document.getElementById("btn");
   const url=document.getElementById("url").value.trim();
-  if(!url) return alert("Masukkan link TikTok!");
+  if(!url) return alert("Masukkan link!");
 
-  music.pause();
+  bgm.pause();
   musicBtn.style.display="none";
 
-  btn.classList.add("loading");
-  btn.textContent="";
-
   const api=`https://www.sankavollerei.com/download/tiktok-hd?apikey=planaai&url=${encodeURIComponent(url)}`;
+  const r=await fetch(api);
+  const j=await r.json();
+  if(!j.status) return alert("Gagal");
 
-  try{
-    const r=await fetch(api);
-    const j=await r.json();
+  const v=j.result;
+  preview.src=v.cover;
 
-    btn.classList.remove("loading");
-    btn.textContent="DOWNLOAD";
-    if(!j.status) return alert("Gagal ambil data");
+  caption.innerHTML=`
+  <div class="caption">
+    <b>${v.title}</b><br>
+    ⏱ ${v.duration}s
+  </div>`;
 
-    links.innerHTML="";
-    back.style.display="block";
+  links.innerHTML="";
+  back.style.display="block";
 
-    preview.src=j.result.links[1]?.url || "Media/menu.jpg";
-
-    captionText=j.result.title || "No caption available";
-    caption.textContent=captionText;
-    caption.style.display="block";
-
-    j.result.links.forEach(v=>{
-      const a=document.createElement("a");
-      a.textContent=v.label;
-      a.href="#";
-      a.onclick=e=>{
-        e.preventDefault();
-        downloadUrl=v.url;
-        modal.style.display="flex";
-      };
-      links.appendChild(a);
-    });
-
-  }catch{
-    btn.classList.remove("loading");
-    btn.textContent="DOWNLOAD";
-    alert("Terjadi error");
-  }
+  v.links.forEach(x=>{
+    const a=document.createElement("a");
+    a.textContent=x.label;
+    a.href="#";
+    a.onclick=e=>{
+      e.preventDefault();
+      downloadUrl=x.url;
+      modal.style.display="flex";
+    };
+    links.appendChild(a);
+  });
 }
 
 function confirmDownload(){
   const a=document.createElement("a");
   a.href=downloadUrl;
   a.download="";
+  document.body.appendChild(a);
   a.click();
-  modal.style.display="none";
+  document.body.removeChild(a);
+  closeModal();
 }
 
 function closeModal(){modal.style.display="none"}
 
 function resetUI(){
-  links.innerHTML="";
-  caption.style.display="none";
-  url.value="";
   preview.src="Media/menu.jpg";
+  caption.innerHTML="";
+  links.innerHTML="";
   back.style.display="none";
-
   musicBtn.style.display="block";
-  music.play();
-  musicIcon.textContent="⏸️";
 }
 </script>
 
