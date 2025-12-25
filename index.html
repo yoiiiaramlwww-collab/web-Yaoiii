@@ -22,8 +22,6 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
   padding:0;
   box-sizing:border-box;
   font-family:"Segoe UI",sans-serif;
-
-  /* 🔒 NO ZOOM / NO SELECT */
   touch-action: manipulation;
   -webkit-user-select:none;
   user-select:none;
@@ -85,7 +83,7 @@ input{
   color:#fff;
   outline:none;
   margin-bottom:8px;
-  user-select:text; /* input tetap bisa select */
+  user-select:text;
 }
 
 input::placeholder{color:#888}
@@ -226,7 +224,7 @@ input::placeholder{color:#888}
     <img id="preview" src="Media/menu.jpg">
   </div>
 
-  <div class="title">Tiktok DOWNLOADER</div>
+  <div class="title">TIKTOK DOWNLOADER</div>
 
   <div class="label">TikTok Link</div>
   <input id="url" placeholder="Tempel link TikTok">
@@ -250,46 +248,47 @@ input::placeholder{color:#888}
 </div>
 
 <script>
-/* 🔒 BLOCK CTRL + SCROLL ZOOM (DESKTOP) */
+/* 🔒 BLOCK CTRL + SCROLL ZOOM */
 document.addEventListener("wheel",e=>{
   if(e.ctrlKey) e.preventDefault();
 },{passive:false});
 
-let downloadUrl="";
+const DEFAULT_PREVIEW = "Media/menu.jpg";
+let downloadUrl = "";
 
 async function getVideo(){
-  const btn=document.getElementById("btn");
-  const url=document.getElementById("url").value.trim();
+  const btn = document.getElementById("btn");
+  const url = document.getElementById("url").value.trim();
   if(!url) return alert("Masukkan link TikTok!");
 
   btn.classList.add("loading");
-  btn.textContent="";
+  btn.textContent = "";
 
-  const api=`https://www.sankavollerei.com/download/tiktok-hd?apikey=planaai&url=${encodeURIComponent(url)}`;
+  const api = `https://www.sankavollerei.com/download/tiktok-hd?apikey=planaai&url=${encodeURIComponent(url)}`;
 
   try{
-    const r=await fetch(api);
-    const j=await r.json();
+    const res = await fetch(api);
+    const json = await res.json();
 
     btn.classList.remove("loading");
-    btn.textContent="DOWNLOAD";
-    if(!j.status) return alert("Gagal ambil data");
+    btn.textContent = "DOWNLOAD";
 
-    links.innerHTML="";
-    back.style.display="block";
+    if(!json.status) return alert("Gagal ambil data");
 
-    if(j.result.links[1]?.url){
-      preview.src=j.result.links[1].url;
-    }
+    links.innerHTML = "";
+    back.style.display = "block";
 
-    j.result.links.forEach(v=>{
-      const a=document.createElement("a");
-      a.textContent=v.label;
-      a.href="#";
-      a.onclick=e=>{
+    /* 🔒 PREVIEW DIKUNCI KE MENU IMAGE */
+    preview.src = DEFAULT_PREVIEW;
+
+    json.result.links.forEach(v=>{
+      const a = document.createElement("a");
+      a.textContent = v.label;
+      a.href = "#";
+      a.onclick = e=>{
         e.preventDefault();
-        downloadUrl=v.url;
-        openModal();
+        downloadUrl = v.url;
+        modal.style.display = "flex";
       };
       links.appendChild(a);
     });
@@ -301,8 +300,10 @@ async function getVideo(){
   }
 }
 
-function openModal(){ modal.style.display="flex"; }
-function closeModal(){ modal.style.display="none"; downloadUrl=""; }
+function closeModal(){
+  modal.style.display="none";
+  downloadUrl="";
+}
 
 function confirmDownload(){
   if(!downloadUrl) return;
@@ -318,7 +319,7 @@ function confirmDownload(){
 function resetUI(){
   links.innerHTML="";
   url.value="";
-  preview.src="Media/menu.jpg";
+  preview.src = DEFAULT_PREVIEW;
   back.style.display="none";
 }
 </script>
