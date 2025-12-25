@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+
+<!-- 🔒 ZOOM LOCK -->
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>TikTok Downloader HD</title>
+
+<style>
+:root{
+  --purple:#9b5cff;
+  --purple-glow:rgba(155,92,255,.6);
+  --bg:#050509;
+  --glass:rgba(255,255,255,.04);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Segoe UI",sans-serif;
+
+  /* 🔒 NO ZOOM / NO SELECT */
+  touch-action: manipulation;
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+body{
+  min-height:100vh;
+  background:radial-gradient(circle at top,#2a0d3f,#050509 65%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  overscroll-behavior:none;
+}
+
+.container{
+  width:92%;
+  max-width:380px;
+}
+
+/* CARD */
+.card{
+  border:2px solid var(--purple);
+  border-radius:20px;
+  padding:6px;
+  box-shadow:0 0 30px var(--purple-glow);
+  margin-bottom:25px;
+}
+
+.card img{
+  width:100%;
+  border-radius:14px;
+  display:block;
+  pointer-events:none;
+}
+
+/* TITLE */
+.title{
+  text-align:center;
+  font-size:26px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin-bottom:22px;
+}
+
+/* INPUT */
+.label{
+  font-size:15px;
+  margin-bottom:6px;
+  opacity:.85;
+}
+
+input{
+  width:100%;
+  padding:15px;
+  border-radius:20px;
+  background:var(--glass);
+  border:2px solid var(--purple);
+  color:#fff;
+  outline:none;
+  margin-bottom:8px;
+  user-select:text; /* input tetap bisa select */
+}
+
+input::placeholder{color:#888}
+
+/* BUTTON */
+.btn{
+  width:100%;
+  padding:16px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#8f4bff,#b277ff);
+  border:none;
+  color:#fff;
+  font-size:18px;
+  font-weight:700;
+  letter-spacing:1px;
+  margin-top:12px;
+  box-shadow:0 0 35px var(--purple-glow);
+  cursor:pointer;
+}
+
+.btn:active{transform:scale(.97)}
+
+/* LOADING */
+.loading{
+  pointer-events:none;
+  opacity:.7;
+  position:relative;
+}
+
+.loading::after{
+  content:"";
+  width:22px;
+  height:22px;
+  border:3px solid #fff;
+  border-top:3px solid transparent;
+  border-radius:50%;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:translate(-50%,-50%) rotate(360deg)}
+}
+
+/* LINKS */
+.links a{
+  display:block;
+  margin-top:12px;
+  padding:15px;
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--purple);
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  text-align:center;
+  box-shadow:0 0 18px rgba(155,92,255,.35);
+}
+
+/* BACK */
+.back{
+  margin-top:16px;
+  text-align:center;
+  font-size:13px;
+  opacity:.6;
+  cursor:pointer;
+  display:none;
+}
+
+/* iOS MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  backdrop-filter:blur(6px);
+  z-index:999;
+}
+
+.modal-box{
+  width:85%;
+  max-width:300px;
+  background:rgba(20,10,30,.9);
+  border:1px solid var(--purple);
+  border-radius:22px;
+  box-shadow:0 0 30px var(--purple-glow);
+  text-align:center;
+  animation:pop .25s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.9);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.modal-box h3{
+  padding:18px;
+  font-size:18px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.modal-actions{
+  display:flex;
+}
+
+.modal-actions button{
+  flex:1;
+  padding:14px;
+  font-size:16px;
+  border:none;
+  background:none;
+  color:#fff;
+  cursor:pointer;
+}
+
+.modal-actions button:first-child{
+  color:#aaa;
+  border-right:1px solid rgba(255,255,255,.1);
+}
+
+.modal-actions button:last-child{
+  color:var(--purple);
+  font-weight:700;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+    <img id="preview" src="Media/menu.jpg">
+  </div>
+
+  <div class="title">Tiktok DOWNLOADER</div>
+
+  <div class="label">TikTok Link</div>
+  <input id="url" placeholder="Tempel link TikTok">
+
+  <button class="btn" id="btn" onclick="getVideo()">DOWNLOAD</button>
+
+  <div class="links" id="links"></div>
+  <div class="back" id="back" onclick="resetUI()">kembali</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Download file?</h3>
+    <div class="modal-actions">
+      <button onclick="closeModal()">No</button>
+      <button onclick="confirmDownload()">Yes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 🔒 BLOCK CTRL + SCROLL ZOOM (DESKTOP) */
+document.addEventListener("wheel",e=>{
+  if(e.ctrlKey) e.preventDefault();
+},{passive:false});
+
+let downloadUrl="";
+
+async function getVideo(){
+  const btn=document.getElementById("btn");
+  const url=document.getElementById("url").value.trim();
+  if(!url) return alert("Masukkan link TikTok!");
+
+  btn.classList.add("loading");
+  btn.textContent="";
+
+  const api=`https://www.sankavollerei.com/download/tiktok-hd?apikey=planaai&url=${encodeURIComponent(url)}`;
+
+  try{
+    const r=await fetch(api);
+    const j=await r.json();
+
+    btn.classList.remove("loading");
+    btn.textContent="DOWNLOAD";
+    if(!j.status) return alert("Gagal ambil data");
+
+    links.innerHTML="";
+    back.style.display="block";
+
+    if(j.result.links[1]?.url){
+      preview.src=j.result.links[1].url;
+    }
+
+    j.result.links.forEach(v=>{
+      const a=document.createElement("a");
+      a.textContent=v.label;
+      a.href="#";
+      a.onclick=e=>{
+        e.preventDefault();
+        downloadUrl=v.url;
+        openModal();
+      };
+      links.appendChild(a);
+    });
+
+  }catch{
+    btn.classList.remove("loading");
+    btn.textContent="DOWNLOAD";
+    alert("Terjadi error");
+  }
+}
+
+function openModal(){ modal.style.display="flex"; }
+function closeModal(){ modal.style.display="none"; downloadUrl=""; }
+
+function confirmDownload(){
+  if(!downloadUrl) return;
+  const a=document.createElement("a");
+  a.href=downloadUrl;
+  a.download="";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  closeModal();
+}
+
+function resetUI(){
+  links.innerHTML="";
+  url.value="";
+  preview.src="Media/menu.jpg";
+  back.style.display="none";
+}
+</script>
+
+</body>
+</html>
